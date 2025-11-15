@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { LoginPage } from './components/LoginPage';
-import { ReportForm, type ReportData } from './components/ReportForm';
-import { ReportPreview } from './components/ReportPreview';
-import { Toaster } from './components/ui/sonner';
+import { useState } from "react";
+import { LoginPage } from "./components/LoginPage";
+import { ReportForm, type ReportData } from "./components/ReportForm";
+import { ReportPreview } from "./components/ReportPreview";
+import { Toaster } from "./components/ui/sonner";
 
-type Screen = 'login' | 'form' | 'preview';
+type Screen = "login" | "form" | "preview";
 
 interface UserInfo {
   region: string;
@@ -14,56 +14,56 @@ interface UserInfo {
 }
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>('login');
+  const [screen, setScreen] = useState<Screen>("login");
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [reportData, setReportData] = useState<ReportData | null>(null);
 
   const handleLogin = (data: UserInfo) => {
     setUserInfo(data);
-    setScreen('form');
+    setScreen("form");
   };
 
   const handleBack = () => {
-    setScreen('login');
+    setScreen("login");
     setUserInfo(null);
     setReportData(null);
   };
 
   const handleBackToForm = () => {
-    setScreen('form');
+    setScreen("form");
   };
 
   const handleGenerate = (data: ReportData) => {
     setReportData(data);
-    setScreen('preview');
+    setScreen("preview");
   };
 
   const handleNewReport = () => {
-    setScreen('login');
+    setScreen("login");
     setUserInfo(null);
     setReportData(null);
   };
 
   return (
     <>
-      {screen === 'login' && <LoginPage onLogin={handleLogin} />}
-      
-      {screen === 'form' && userInfo && (
+      {screen === "login" && <LoginPage onLogin={handleLogin} />}
+
+      {screen === "form" && userInfo && (
         <ReportForm
           userInfo={userInfo}
           onBack={handleBack}
           onGenerate={handleGenerate}
         />
       )}
-      
-      {screen === 'preview' && reportData && (
+
+      {screen === "preview" && reportData && (
         <ReportPreview
           reportData={reportData}
           onBack={handleBackToForm}
           onNewReport={handleNewReport}
         />
       )}
-      
+
       <Toaster />
     </>
   );

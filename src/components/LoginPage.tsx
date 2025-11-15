@@ -1,11 +1,23 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Button } from './ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import { Eye } from 'lucide-react';
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { Eye } from "lucide-react";
 
 interface LoginPageProps {
   onLogin: (data: {
@@ -17,10 +29,10 @@ interface LoginPageProps {
 }
 
 export function LoginPage({ onLogin }: LoginPageProps) {
-  const [region, setRegion] = useState('');
-  const [organization, setOrganization] = useState('');
-  const [reportType, setReportType] = useState('');
-  const [customReportType, setCustomReportType] = useState('');
+  const [region, setRegion] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [reportType, setReportType] = useState("");
+  const [customReportType, setCustomReportType] = useState("");
   const [usageCount, setUsageCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +40,9 @@ export function LoginPage({ onLogin }: LoginPageProps) {
     // Fetch usage count from backend
     const fetchUsageCount = async () => {
       try {
-        const { projectId, publicAnonKey } = await import('../utils/supabase/info');
+        const { projectId, publicAnonKey } = await import(
+          "../utils/supabase/info"
+        );
         const response = await fetch(
           `https://${projectId}.supabase.co/functions/v1/make-server-207bf4c4/usage-count`,
           {
@@ -40,7 +54,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         const data = await response.json();
         setUsageCount(data.count || 0);
       } catch (error) {
-        console.error('Error fetching usage count:', error);
+        console.error("Error fetching usage count:", error);
       } finally {
         setLoading(false);
       }
@@ -51,41 +65,46 @@ export function LoginPage({ onLogin }: LoginPageProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!region || !organization || !reportType) {
       return;
     }
 
-    if (reportType === 'other' && !customReportType) {
+    if (reportType === "other" && !customReportType) {
       return;
     }
 
     // Increment usage count
     try {
-      const { projectId, publicAnonKey } = await import('../utils/supabase/info');
+      const { projectId, publicAnonKey } = await import(
+        "../utils/supabase/info"
+      );
       await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-207bf4c4/increment-usage`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
             Authorization: `Bearer ${publicAnonKey}`,
           },
         }
       );
     } catch (error) {
-      console.error('Error incrementing usage count:', error);
+      console.error("Error incrementing usage count:", error);
     }
 
     onLogin({
       region,
       organization,
-      reportType: reportType === 'other' ? customReportType : reportType,
-      customReportType: reportType === 'other' ? customReportType : undefined,
+      reportType: reportType === "other" ? customReportType : reportType,
+      customReportType: reportType === "other" ? customReportType : undefined,
     });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4"
+      dir="rtl"
+    >
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
@@ -95,16 +114,16 @@ export function LoginPage({ onLogin }: LoginPageProps) {
               className="h-20 w-20 rounded-full object-cover"
             />
           </div>
-          <CardTitle>Report Management System</CardTitle>
-          <CardDescription>Enter your details to generate a report</CardDescription>
+          <CardTitle>نظام إدارة التقارير</CardTitle>
+          <CardDescription>أدخل تفاصيلك لإنشاء تقرير</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="region">Region</Label>
+              <Label htmlFor="region">المنطقة</Label>
               <Input
                 id="region"
-                placeholder="Enter region"
+                placeholder="أدخل المنطقة"
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
                 required
@@ -112,10 +131,10 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="organization">Organization</Label>
+              <Label htmlFor="organization">المنظمة</Label>
               <Input
                 id="organization"
-                placeholder="Enter organization name"
+                placeholder="أدخل اسم المنظمة"
                 value={organization}
                 onChange={(e) => setOrganization(e.target.value)}
                 required
@@ -123,26 +142,26 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="reportType">Report Type</Label>
+              <Label htmlFor="reportType">نوع التقرير</Label>
               <Select value={reportType} onValueChange={setReportType} required>
                 <SelectTrigger id="reportType">
-                  <SelectValue placeholder="Select report type" />
+                  <SelectValue placeholder="اختر نوع التقرير" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="achievement">Achievement Report</SelectItem>
-                  <SelectItem value="financial">Financial Report</SelectItem>
-                  <SelectItem value="maintenance">Maintenance Report</SelectItem>
-                  <SelectItem value="other">Other (Custom)</SelectItem>
+                  <SelectItem value="achievement">تقرير الإنجازات</SelectItem>
+                  <SelectItem value="financial">التقرير المالي</SelectItem>
+                  <SelectItem value="maintenance">تقرير الصيانة</SelectItem>
+                  <SelectItem value="other">آخر (مخصص)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {reportType === 'other' && (
+            {reportType === "other" && (
               <div className="space-y-2">
-                <Label htmlFor="customReportType">Custom Report Type</Label>
+                <Label htmlFor="customReportType">نوع التقرير المخصص</Label>
                 <Input
                   id="customReportType"
-                  placeholder="Enter custom report type"
+                  placeholder="أدخل نوع التقرير المخصص"
                   value={customReportType}
                   onChange={(e) => setCustomReportType(e.target.value)}
                   required
@@ -151,7 +170,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             )}
 
             <Button type="submit" className="w-full">
-              Continue to Report
+              متابعة إلى التقرير
             </Button>
           </form>
 
@@ -159,7 +178,8 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <Eye className="h-4 w-4" />
               <span>
-                App Usage: {loading ? '...' : usageCount} {usageCount === 1 ? 'time' : 'times'}
+                استخدام التطبيق: {loading ? "..." : usageCount}{" "}
+                {usageCount === 1 ? "مرة" : "مرات"}
               </span>
             </div>
           </div>

@@ -127,13 +127,46 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* RTL Support */
+  html[dir="rtl"] {
+    direction: rtl;
+  }
+
+  html[dir="ltr"] {
+    direction: ltr;
+  }
+
+  /* Adjust margins and padding for RTL */
+  html[dir="rtl"] button,
+  html[dir="rtl"] input,
+  html[dir="rtl"] textarea,
+  html[dir="rtl"] select {
+    text-align: right;
+  }
+
+  html[dir="rtl"] .mr-2 {
+    @apply ml-2 mr-0;
+  }
+
+  html[dir="rtl"] .ml-2 {
+    @apply mr-2 ml-0;
+  }
+
+  html[dir="rtl"] .mr-4 {
+    @apply ml-4 mr-0;
+  }
+
+  html[dir="rtl"] .ml-4 {
+    @apply mr-4 ml-0;
+  }
 }
 
 /**
  * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
  */
 @layer base {
-  :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
     h1 {
       font-size: var(--text-2xl);
       font-weight: var(--font-weight-medium);
